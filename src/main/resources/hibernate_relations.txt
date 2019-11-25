@@ -1,0 +1,101 @@
+------------------------------------------------------------------
+@OneToOne
+------------------------------------------------------------------
+
+Student:
+    private int id;
+    private int grade;
+    private String name;
+
+    @OneToOne
+    private Laptop laptop;
+
+    student_table
+        id, grade, name, address, laptop_id
+
+Laptop:
+    private int id;
+    private String name;
+
+    laptop_table
+        id, name
+
+
+------------------------------------------------------------------
+@OneToMany  - scenario #1, with extra reference table
+------------------------------------------------------------------
+
+Student:
+    private int id;
+    private int grade;
+    private String name;
+
+    @OneToMany
+    private List<Laptop> laptops = new ArrayList<>();
+
+Laptop:
+    private int id;
+    private String name;
+
+    laptop_table
+        id, name
+
+
+student_laptop_REF_table:
+    student_id, laptop_id
+
+------------------------------------------------------------------
+@OneToMany  - scenario #2, without extra reference table
+------------------------------------------------------------------
+
+Student:
+    private int id;
+    private int grade;
+    private String name;
+
+    // means mapping is done by laptop, do not worry
+    @OneToMany(mappedBy = "student")
+    private List<Laptop> laptops = new ArrayList<>();
+
+Laptop:
+    private int id;
+    private String name;
+
+    @ManyToOne
+    private Student student;
+
+
+    laptop_table
+        id, name, student_id
+
+
+------------------------------------------------------------------
+@ManyToMany
+------------------------------------------------------------------
+
+Student:
+    private int id;
+    private int grade;
+    private String name;
+
+    // without mappedBy both tables will create their own extra tables!
+    @manyToMany(mappedBy = "student")
+    private List<Laptop> laptops = new ArrayList<>();
+
+
+Laptop:
+    private int id;
+    private String name;
+
+    @ManyToMany
+    private List<Student> students = new ArrayList<>();;
+
+
+    student_table
+        id, grade, name, address
+
+    laptop_table
+        id, name
+
+    students_laptops_REF_table:
+        student_id, laptop_id
